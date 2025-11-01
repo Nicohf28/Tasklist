@@ -14,7 +14,7 @@ function crearElementoTarea(texto) {
     checkbox.classList.add("chkTarea");
 
     let span = document.createElement("span");
-    span.textContent = texto;
+    span.textContent = " " + texto;
 
     li.appendChild(checkbox);
     li.appendChild(span);
