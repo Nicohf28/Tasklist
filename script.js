@@ -4,8 +4,39 @@ let btnAgregarTarea = document.getElementById("btnAgregarTarea");
 let listaTareas = document.getElementById("listaTareas");
 let contadorTareas = document.getElementById("contadorTareas");
 let btnBorrarTodo = document.getElementById("btnBorrarTodo");
+let btnBorrarSeleccionadas = document.getElementById("btnBorrarSeleccionadas");
 
 // ------------- Funciones ------------
+function crearElementoTarea(texto) {
+    let li = document.createElement("li");
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("chkTarea");
+
+    let span = document.createElement("span");
+    span.textContent = texto;
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    return li;
+}
+
+function borrarSeleccionadas() {
+    let checkboxes = document.querySelectorAll(".chkTarea");
+
+    let tareasRestantes = [];
+
+    checkboxes.forEach(chk => {
+        if (!chk.checked) {
+            let texto = chk.nextSibling.textContent;
+            tareasRestantes.push(texto);
+        }
+    });
+
+    localStorage.setItem("tareas", JSON.stringify(tareasRestantes));
+    cargarTareas();
+}
+
 function borrarTodasTareas() {
     localStorage.removeItem("tareas");
     listaTareas.innerHTML = "";
@@ -24,8 +55,7 @@ function cargarTareas() {
     listaTareas.innerHTML = "";
 
     tareasGuardadas.forEach(tarea => {
-        let li = document.createElement("li");
-        li.textContent = tarea;
+        let li = crearElementoTarea(tarea);
         listaTareas.appendChild(li);
     });
 
@@ -36,8 +66,7 @@ function agregarTarea() {
     let textoTarea = inputTareas.value.trim();
 
     if (textoTarea) {
-        let nuevaTarea = document.createElement("li");
-        nuevaTarea.textContent = textoTarea;
+        let nuevaTarea = crearElementoTarea(textoTarea);
         listaTareas.appendChild(nuevaTarea);
 
         let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
@@ -64,3 +93,5 @@ inputTareas.addEventListener("keypress", function(event) {
 window.addEventListener("load", cargarTareas);
 
 btnBorrarTodo.addEventListener("click", borrarTodasTareas);
+
+btnBorrarSeleccionadas.addEventListener("click", borrarSeleccionadas);
